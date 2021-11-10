@@ -1,7 +1,15 @@
+%针对第一次扫描的初始化
 function map = Initialize(map, pose, scan)
-
+%--------------------------------------------------------------------------
+%输入
+%    map为地图(全局)
+%    pose为
+%    scan为
+%--------------------------------------------------------------------------
+% 把对于小车的局部坐标数据 转化为 全局地图坐标
 % Points in world frame
-map.points = Transform(scan, pose);
+map.points = Transform(scan, pose);%将转化为全局坐标后的扫描数据scan放入全局地图点集
+%
 
 % Key scans' information
 k = length(map.keyscans);
