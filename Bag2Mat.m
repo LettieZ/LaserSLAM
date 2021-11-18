@@ -1,30 +1,30 @@
 clear;clc;
 
-% ÔÚros»·¾³ÖĞ½âÑ¹ËõÔ­Ê¼bagÎÄ¼ş:rosbag decompress 1.bag
+% åœ¨rosç¯å¢ƒä¸­è§£å‹ç¼©åŸå§‹bagæ–‡ä»¶, eg:rosbag decompress 1.bag
 
-%¶ÁÈ¡½âÑ¹ºóµÄbagÎÄ¼şÊı¾İ
+% è¯»å–è§£å‹åçš„bagæ–‡ä»¶æ•°æ®
 bag = rosbag('1.orig.bag');
-%¶ÁÈ¡Ë®Æ½À×´ïtopic Êı¾İ
+% è¯»å–æ°´å¹³é›·è¾¾topic æ•°æ®
  laser = select(bag, 'Time', ...
             [bag.StartTime bag.EndTime], 'Topic', '/horizontal_laser_2d');
         
-%% ´ÓÎÄ¼şÖĞ²éÕÒÊı¾İµÄ´óĞ¡ 
-N = laser.NumMessages;%À×´ïÊı¾İÌõÊı
+%% ä»æ–‡ä»¶ä¸­æŸ¥æ‰¾æ•°æ®çš„å¤§å° 
+N = laser.NumMessages;%é›·è¾¾æ•°æ®æ¡æ•°
 x = readMessages(laser,1);
 [M,~] = size(x{1,1}.Ranges);
-times = zeros(N,1);%Ê±¼ä²ÎÊı
-ranges = zeros(N,M);%¾àÀë²ÎÊı
+times = zeros(N,1);%æ—¶é—´å‚æ•°
+ranges = zeros(N,M);%è·ç¦»å‚æ•°
 
-%% Ñ­»·¶ÁÈ¡Êı¾İ £ºÕûÌå¶ÁÈ¡Ê±»á³öÏÖÄÚ´æ²»×ãµÄÇé¿ö
+%% å¾ªç¯è¯»å–æ•°æ® ï¼šæ•´ä½“è¯»å–æ—¶ä¼šå‡ºç°å†…å­˜ä¸è¶³çš„æƒ…å†µ
 for i=1:N
     temp = readMessages(laser,i);
-    times(i) = temp{1,1}.Header.Stamp.Sec;%Ê±¼äÊı¾İ
-    ranges_temp = temp{1,1}.Ranges;%À×´ï²âÁ¿Êı¾İ£¨1079Î¬Êı¾İ£©
+    times(i) = temp{1,1}.Header.Stamp.Sec; % æ—¶é—´æ•°æ®
+    ranges_temp = temp{1,1}.Ranges; % é›·è¾¾æµ‹é‡æ•°æ®ï¼ˆ1079ç»´æ•°æ®ï¼‰
     ranges(i,:) = ranges_temp;
-    %ÏÔÊ¾½ø¶È
+    % æ˜¾ç¤ºè¿›åº¦
     if mod(i,100)==0
-        disp(['´¦Àí½ø¶È%£º', num2str(i/N*100)]);
+        disp(['å¤„ç†è¿›åº¦%ï¼š', num2str(i/N*100)]);
     end
 end
-%Êı¾İ±£´æÎªmatÎÄ¼ş
+% æ•°æ®ä¿å­˜ä¸ºmatæ–‡ä»¶
 save new_laser_data.mat times ranges
