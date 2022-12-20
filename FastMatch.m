@@ -30,7 +30,7 @@ depth = 0;%分辨率提高次数
 
 pixelScan = scan * ipixel;%将 扫描数据 实际坐标 转化为 栅格地图中的栅格坐标
 bestPose  = pose;
-bestScore = Inf;
+ bestScore = Inf;
 t = searchResolution(1);%x和y坐标的搜索分辨率
 r = searchResolution(3);%theta的搜索分辨率
 
