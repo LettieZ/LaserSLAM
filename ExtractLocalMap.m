@@ -1,28 +1,28 @@
-% ´ÓÈ«¾ÖµØÍ¼ÖÐ ÌáÈ¡µ±Ç°É¨ÃèÖÜÎ§µÄ¾Ö²¿µØÍ¼ µÄÈ«¾Ö×ø±ê
+% ä»Žå…¨å±€åœ°å›¾ä¸­ æå–å½“å‰æ‰«æå‘¨å›´çš„å±€éƒ¨åœ°å›¾ çš„å…¨å±€åæ ‡
 % Extract a local map around current scan
 function localMap = ExtractLocalMap(points, pose, scan, borderSize)
 %--------------------------------------------------------------------------
-%ÊäÈë
-%   pointsÎªÈ«¾ÖµØÍ¼µã¼¯
-%   poseÎªµ±Ç°Î»×Ë
-%   scanÎªµ±Ç°É¨ÃèÊý¾ÝµÄ¾Ö²¿×ø±ê
-%   borderSizeÎª
+%è¾“å…¥
+%   pointsä¸ºå…¨å±€åœ°å›¾ç‚¹é›†
+%   poseä¸ºå½“å‰ä½å§¿
+%   scanä¸ºå½“å‰æ‰«ææ•°æ®çš„å±€éƒ¨åæ ‡
+%   borderSizeä¸º
 %--------------------------------------------------------------------------
 
-% ½«µ±Ç°É¨ÃèÊý¾Ý×ø±êscan ×ª»¯ÎªÈ«¾Ö×ø±êscan_w
+% å°†å½“å‰æ‰«ææ•°æ®åæ ‡scan è½¬åŒ–ä¸ºå…¨å±€åæ ‡scan_w
 % Transform current scan into world frame
 scan_w = Transform(scan, pose);
-% ÉèÖÃ ×óÉÏ½Ç ºÍ ÓÒÏÂ½Ç
+% è®¾ç½® å·¦ä¸Šè§’ å’Œ å³ä¸‹è§’
 % Set top-left & bottom-right corner
 minX = min(scan_w(:,1) - borderSize);
 minY = min(scan_w(:,2) - borderSize);
 maxX = max(scan_w(:,1) + borderSize);
 maxY = max(scan_w(:,2) + borderSize);
-% ÌáÈ¡Î»ÓÚ·¶Î§ÄÚµÄÈ«¾ÖµØÍ¼ÖÐµÄµã
+% æå–ä½äºŽèŒƒå›´å†…çš„å…¨å±€åœ°å›¾ä¸­çš„ç‚¹
 % Extract
 isAround = points(:,1) > minX...
          & points(:,1) < maxX...
          & points(:,2) > minY...
          & points(:,2) < maxY;
-%´ÓÈ«¾ÖµØÍ¼ÖÐÌáÈ¡µ½µÄµ±Ç°É¨Ãèµã
+%ä»Žå…¨å±€åœ°å›¾ä¸­æå–åˆ°çš„å½“å‰æ‰«æç‚¹
 localMap = points(isAround, :);

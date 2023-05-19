@@ -1,34 +1,34 @@
-%»æÍ¼(µã¼¯µØÍ¼¡¢Â·¾¶¡¢µ±Ç°Î»×Ë¡¢µ±Ç°LiDARÉ¨ÃèÏß)
+%ç»˜å›¾(ç‚¹é›†åœ°å›¾ã€è·¯å¾„ã€å½“å‰ä½å§¿ã€å½“å‰LiDARæ‰«æçº¿)
 function PlotMap(cfig, map, path, scan, scanIdx)
 %--------------------------------------------------------------------------
-%ÊäÈë
-%   cfigÎªplot»æÖÆÎ»ÖÃ(½«ËùÓĞÊ±¿ÌµÄÍ¼µş¼ÓÔÚÒ»ÕÅÍ¼ÉÏ)
-%   mapÎªÈ«¾ÖµØÍ¼
-%   pathÎªÂ·¾¶
-%   scanÎªµ±Ç°Î»ÖÃµÄ¾Ö²¿µÑ¿¨¶û×ø±ê
-%   scanIdxÎªµ±Ç°É¨ÃèË÷Òı
+%è¾“å…¥
+%   cfigä¸ºplotç»˜åˆ¶ä½ç½®(å°†æ‰€æœ‰æ—¶åˆ»çš„å›¾å åŠ åœ¨ä¸€å¼ å›¾ä¸Š)
+%   mapä¸ºå…¨å±€åœ°å›¾
+%   pathä¸ºè·¯å¾„
+%   scanä¸ºå½“å‰ä½ç½®çš„å±€éƒ¨ç¬›å¡å°”åæ ‡
+%   scanIdxä¸ºå½“å‰æ‰«æç´¢å¼•
 %--------------------------------------------------------------------------
-world   = map.points;%È«¾ÖµØÍ¼µã¼¯¸³¸øworld
-scan = Transform(scan, path(:,end));%½«µ±Ç°Î»ÖÃµÄ¾Ö²¿µÑ¿¨¶û×ø±ê ÀûÓÃÂ·¾¶ ×ª»¯ÎªÈ«¾ÖµÑ¿¨¶û×ø±ê
+world   = map.points;%å…¨å±€åœ°å›¾ç‚¹é›†èµ‹ç»™world
+scan = Transform(scan, path(:,end));%å°†å½“å‰ä½ç½®çš„å±€éƒ¨ç¬›å¡å°”åæ ‡ åˆ©ç”¨è·¯å¾„ è½¬åŒ–ä¸ºå…¨å±€ç¬›å¡å°”åæ ‡
 
-worldColor = [0 0 0];%µØÍ¼µÄÑÕÉ«(ºÚÉ«)
-% scanColor = [148/255 0 211/255];%µ±Ç°Î»ÖÃÑÕÉ«(Éî×ÏÉ«)
-scanColor = [0 1 0];%µ±Ç°Î»ÖÃÑÕÉ«(ÂÌÉ«)
-pathColor = [0 0 1];%Â·¾¶ÑÕÉ«(À¶É«)
-lidarColor=[205/255 38/255 38/255];%LiDARÉ¨ÃèÏßÑÕÉ«(×©ºìÉ«)
+worldColor = [0 0 0];%åœ°å›¾çš„é¢œè‰²(é»‘è‰²)
+% scanColor = [148/255 0 211/255];%å½“å‰ä½ç½®é¢œè‰²(æ·±ç´«è‰²)
+scanColor = [0 1 0];%å½“å‰ä½ç½®é¢œè‰²(ç»¿è‰²)
+pathColor = [0 0 1];%è·¯å¾„é¢œè‰²(è“è‰²)
+lidarColor=[205/255 38/255 38/255];%LiDARæ‰«æçº¿é¢œè‰²(ç –çº¢è‰²)
 % Plot
 cfig(1); clf; 
 set(0,'defaultfigurecolor','w')
 set(gca,'box','on')
-set(gca, 'color', [1,1,1]);%ÉèÖÃ±³¾°ÑÕÉ«(°×É«)
+set(gca, 'color', [1,1,1]);%è®¾ç½®èƒŒæ™¯é¢œè‰²(ç™½è‰²)
 hold on;  axis equal;
-plot(world(:,1), world(:,2), '*', 'MarkerSize', 2, 'color', worldColor);%»­È«¾ÖµØÍ¼µã¼¯+
-plot(scan(:,1),  scan(:,2),  '*', 'MarkerSize', 2, 'color', scanColor);%»­µ±Ç°µÄÉ¨ÃèµãÍ¼
-plot(path(1,:),  path(2,:),  '-.', 'LineWidth', 1, 'color', pathColor);%»­Â·¾¶
+plot(world(:,1), world(:,2), '*', 'MarkerSize', 2, 'color', worldColor);%ç”»å…¨å±€åœ°å›¾ç‚¹é›†+
+plot(scan(:,1),  scan(:,2),  '*', 'MarkerSize', 2, 'color', scanColor);%ç”»å½“å‰çš„æ‰«æç‚¹å›¾
+plot(path(1,:),  path(2,:),  '-.', 'LineWidth', 1, 'color', pathColor);%ç”»è·¯å¾„
 for i = 1:20:length(scan)
-    line([path(1,end), scan(i,1)], [path(2,end), scan(i,2)], 'color', lidarColor);%»­³öµ±Ç°Î»ÖÃµÄLiDARÉ¨ÃèÏß
+    line([path(1,end), scan(i,1)], [path(2,end), scan(i,2)], 'color', lidarColor);%ç”»å‡ºå½“å‰ä½ç½®çš„LiDARæ‰«æçº¿
 end
-title(['Scan: ', num2str(scanIdx)]);%±êÌâ
+title(['Scan: ', num2str(scanIdx)]);%æ ‡é¢˜
 drawnow
 % frame = getframe(cfig);
 % cda = frame.cdata;

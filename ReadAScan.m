@@ -1,23 +1,23 @@
-%½«LiDARdµÚidx´ÎÉ¨ÃèÊı¾İ´Ó¼«×ø±ê×ª»¯ÎªµÑ¿¨¶û×ø±ê(Ïà¶ÔÓÚĞ¡³µµÄ¾Ö²¿×ø±ê)
+%å°†LiDARdç¬¬idxæ¬¡æ‰«ææ•°æ®ä»æåæ ‡è½¬åŒ–ä¸ºç¬›å¡å°”åæ ‡(ç›¸å¯¹äºå°è½¦çš„å±€éƒ¨åæ ‡)
 % Read a laser scan
 function scan = ReadAScan(lidar_data, idx, lidar, usableRange)
 %--------------------------------------------------------------------------
-% ÊäÈë:
-%lidar_dataÎª¶ÁÈ¡µÄLiDARÉ¨ÃèÊı¾İ
-%idxÎªÉ¨Ãè´ÎÊıµÄË÷ÒıÖµ
-%lidarÎªÓÉSetLidarParameters()ÉèÖÃµÄLiDAR²ÎÊı
-%usableRangeÎª¿ÉÊ¹ÓÃµÄ·¶Î§
+% è¾“å…¥:
+%lidar_dataä¸ºè¯»å–çš„LiDARæ‰«ææ•°æ®
+%idxä¸ºæ‰«ææ¬¡æ•°çš„ç´¢å¼•å€¼
+%lidarä¸ºç”±SetLidarParameters()è®¾ç½®çš„LiDARå‚æ•°
+%usableRangeä¸ºå¯ä½¿ç”¨çš„èŒƒå›´
 %--------------------------------------------------------------------------
     angles = lidar.angles;%
-    ranges = lidar_data.ranges(idx, :)';%Ñ¡È¡LiDARÊı¾İµÄrangesÖĞidxË÷Òı¶ÔÓ¦µÄÕâ´ÎÉ¨ÃèµÄÊı¾İ
-    % É¾³ı·¶Î§²»Ì«¿É¿¿µÄµã
+    ranges = lidar_data.ranges(idx, :)';%é€‰å–LiDARæ•°æ®çš„rangesä¸­idxç´¢å¼•å¯¹åº”çš„è¿™æ¬¡æ‰«æçš„æ•°æ®
+    % åˆ é™¤èŒƒå›´ä¸å¤ªå¯é çš„ç‚¹
     % Remove points whose range is not so trustworthy
     maxRange = min(lidar.range_max, usableRange);
-    isBad = ranges < lidar.range_min | ranges > maxRange;%rangesÖĞĞ¡ÓÚ×îĞ¡½Ç¶È»ò´óÓÚ×î´ó½Ç¶ÈµÄ Êı¾İµÄ Ë÷ÒıÏÂ±ê
+    isBad = ranges < lidar.range_min | ranges > maxRange;%rangesä¸­å°äºæœ€å°è§’åº¦æˆ–å¤§äºæœ€å¤§è§’åº¦çš„ æ•°æ®çš„ ç´¢å¼•ä¸‹æ ‡
     angles(isBad) = [];
     ranges(isBad) = [];
-    % ´Ó¼«×ø±ê×ª»»ÎªµÑ¿¨¶û×ø±ê
+    % ä»æåæ ‡è½¬æ¢ä¸ºç¬›å¡å°”åæ ‡
     % Convert from polar coordinates to cartesian coordinates
-    [xs, ys] = pol2cart(angles, ranges);%(angles, ranges)Îª¼«×ø±êÖĞµÄ(theta,rho)
+    [xs, ys] = pol2cart(angles, ranges);%(angles, ranges)ä¸ºæåæ ‡ä¸­çš„(theta,rho)
     scan = [xs, ys];  
 end

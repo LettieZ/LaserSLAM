@@ -1,115 +1,115 @@
-%Ö÷º¯Êı
+%ä¸»å‡½æ•°
 clear; close all; clc;
 %cfig = figure(1);
 cfig = figure('Position', [10,10,1280,1080]);
-%% ¼¤¹âÀ×´ïµÄ´«¸ĞÆ÷²ÎÊı
+%% æ¿€å…‰é›·è¾¾çš„ä¼ æ„Ÿå™¨å‚æ•°
 lidar = SetLidarParameters();
-%% µØÍ¼²ÎÊı
-borderSize      = 1;            % ±ß½ç³ß´ç
-pixelSize       = 0.05;         % Õ¤¸ñµØÍ¼µÄÒ»¸öµ¥ÔªµÄ±ß³¤ ¶ÔÓ¦ Êµ¼Ê¾àÀëpixelSizeÃ×(ÕâÀïÉèÖÃÎª0.05Ã×)
+%% åœ°å›¾å‚æ•°
+borderSize      = 1;            % è¾¹ç•Œå°ºå¯¸
+pixelSize       = 0.05;         % æ …æ ¼åœ°å›¾çš„ä¸€ä¸ªå•å…ƒçš„è¾¹é•¿ å¯¹åº” å®é™…è·ç¦»pixelSizeç±³(è¿™é‡Œè®¾ç½®ä¸º0.05ç±³)
 miniUpdated     = false;        % 
-miniUpdateDT    = 0.2;          % µ¥Î»m   Èô»úÆ÷ÈËÔÚx·½Ïò»òy·½ÏòÒÆ¶¯³¬¹ıminiUpdateDTÔò¸üĞÂÎ»×Ë
-miniUpdateDR    = deg2rad(10);   % µ¥Î»rad Èô»úÆ÷ÈËĞı×ª³¬¹ıminiUpdateDR Ôò¸üĞÂÎ»×Ë 
-% ÔË¶¯ÂË²¨£ºÈç¹û»úÆ÷ÈË´Ó×îºóÒ»´Î¼üÉ¨ÃèÒÆ¶¯ÁË0.1Ã×»òĞı×ªÁË5¶È£¬ÎÒÃÇ½«Ìí¼ÓÒ»¸öĞÂµÄ¼üÉ¨Ãè²¢¸üĞÂµØÍ¼
+miniUpdateDT    = 0.2;          % å•ä½m   è‹¥æœºå™¨äººåœ¨xæ–¹å‘æˆ–yæ–¹å‘ç§»åŠ¨è¶…è¿‡miniUpdateDTåˆ™æ›´æ–°ä½å§¿
+miniUpdateDR    = deg2rad(10);  % å•ä½rad è‹¥æœºå™¨äººæ—‹è½¬è¶…è¿‡miniUpdateDR åˆ™æ›´æ–°ä½å§¿ 
+% è¿åŠ¨æ»¤æ³¢ï¼šå¦‚æœæœºå™¨äººä»æœ€åä¸€æ¬¡é”®æ‰«æç§»åŠ¨äº†0.1ç±³æˆ–æ—‹è½¬äº†5åº¦ï¼Œæˆ‘ä»¬å°†æ·»åŠ ä¸€ä¸ªæ–°çš„é”®æ‰«æå¹¶æ›´æ–°åœ°å›¾
 
-%% É¨ÃèÆ¥Åä²ÎÊı
-fastResolution  = [0.2; 0.2; deg2rad(20)]; % [m; m; rad]µÄ·Ö±æÂÊ ¿ìËÙËÑË÷´°¿Ú[0.2m,20rad]
+%% æ‰«æåŒ¹é…å‚æ•°
+fastResolution  = [0.2; 0.2; deg2rad(20)]; % [m; m; rad]çš„åˆ†è¾¨ç‡ å¿«é€Ÿæœç´¢çª—å£[0.2m,20rad]
 bruteResolution = [0.01; 0.01; deg2rad(0.1)]; % not used
 
-%% ¶ÁÈ¡¼¤¹âÀ×´ïÊı¾İ
+%% è¯»å–æ¿€å…‰é›·è¾¾æ•°æ®
 % lidar_data = load('./dataset/horizental_lidar.mat');
-% N = size(lidar_data.timestamps, 1);%É¨Ãè´ÎÊı(¿ØÖÆÏÂÃæµÄÑ­»·´ÎÊı)
+% N = size(lidar_data.timestamps, 1);%æ‰«ææ¬¡æ•°(æ§åˆ¶ä¸‹é¢çš„å¾ªç¯æ¬¡æ•°)
 lidar_data = load('./dataset/new_laser_data1.mat');
-N = size(lidar_data.times, 1);%É¨Ãè´ÎÊı(¿ØÖÆÏÂÃæµÄÑ­»·´ÎÊı)
+N = size(lidar_data.times, 1);
 
-%% ¹¹ÔìÒ»¸ö¿ÕÈ«¾ÖµØÍ¼
-map.points = [];%µØÍ¼µã¼¯
+%% æ„é€ ä¸€ä¸ªç©ºå…¨å±€åœ°å›¾
+map.points = [];%åœ°å›¾ç‚¹é›†
 map.connections = [];
-map.keyscans = [];%keyscans±£´æµ±Ç°ÕıÈ·Î»×ËµÄÉ¨ÃèÊı¾İ Èç¹ûÔ¤²âµÃµ½µÄÏÂÒ»Î»×Ë³öÏÖ´íÎó Ôò·µ»Øµ½¾àÆä×î½üµÄÇ°Ò»Î»×ËÖØĞÂ¼ÆËã
-pose = [0; 0; 0];%³õÊ¼Î»×ËÎª(x=0,y=0,theta=0)
-path = pose;%Î»×Ë²¢ÖÃ¹¹³ÉÂ·¾¶
+map.keyscans = [];%keyscansä¿å­˜å½“å‰æ­£ç¡®ä½å§¿çš„æ‰«ææ•°æ® å¦‚æœé¢„æµ‹å¾—åˆ°çš„ä¸‹ä¸€ä½å§¿å‡ºç°é”™è¯¯ åˆ™è¿”å›åˆ°è·å…¶æœ€è¿‘çš„å‰ä¸€ä½å§¿é‡æ–°è®¡ç®—
+pose = [0; 0; 0];%åˆå§‹ä½å§¿ä¸º(x=0,y=0,theta=0)
+path = pose;%ä½å§¿å¹¶ç½®æ„æˆè·¯å¾„
 
-%ÊÇ·ñ½«»æÖÆ¹ı³Ì±£´æ³ÉÊÓÆµ
+%æ˜¯å¦å°†ç»˜åˆ¶è¿‡ç¨‹ä¿å­˜æˆè§†é¢‘
 saveFrame=0;
 if saveFrame==1
-    % ÊÓÆµ±£´æÎÄ¼ş¶¨ÒåÓë´ò¿ª
-    writerObj=VideoWriter('SLAMprocess.avi');  % ¶¨ÒåÒ»¸öÊÓÆµÎÄ¼şÓÃÀ´´æ¶¯»­  
-    open(writerObj);                    % ´ò¿ª¸ÃÊÓÆµÎÄ¼ş
+    % è§†é¢‘ä¿å­˜æ–‡ä»¶å®šä¹‰ä¸æ‰“å¼€
+    writerObj=VideoWriter('SLAMprocess.avi');  % å®šä¹‰ä¸€ä¸ªè§†é¢‘æ–‡ä»¶ç”¨æ¥å­˜åŠ¨ç”»  
+    open(writerObj);                    % æ‰“å¼€è¯¥è§†é¢‘æ–‡ä»¶
 end
 
 %% Here we go!!!!!!!!!!!!!!!!!!!!
 for scanIdx = 1 : 1 : N
     disp(['scan ', num2str(scanIdx)]);
     
-    % µÃµ½µ±Ç°µÄÉ¨Ãè [x1,y1; x2,y2; ...]
-    %time = lidar_data.timestamps(scanIdx) * 1e-9;%Ê±¼äÉèÖÃ³ÉÃ¿1e-9É¨ÃèÒ»´Î
-    scan = ReadAScan(lidar_data, scanIdx, lidar, 6);%×îÔ¶¾àÀë6Ã×;µÃµ½¸Ã´ÎÉ¨ÃèÊı¾İµÄ¾Ö²¿µÑ¿¨¶û×ø±ê
+    % å¾—åˆ°å½“å‰çš„æ‰«æ [x1,y1; x2,y2; ...]
+    %time = lidar_data.timestamps(scanIdx) * 1e-9;%æ—¶é—´è®¾ç½®æˆæ¯1e-9æ‰«æä¸€æ¬¡
+    scan = ReadAScan(lidar_data, scanIdx, lidar, 6);%æœ€è¿œè·ç¦»6ç±³;å¾—åˆ°è¯¥æ¬¡æ‰«ææ•°æ®çš„å±€éƒ¨ç¬›å¡å°”åæ ‡
 
-    % Èç¹ûÊÇµÚÒ»´ÎÉ¨Ãè Ôò³õÊ¼»¯
+    % å¦‚æœæ˜¯ç¬¬ä¸€æ¬¡æ‰«æ åˆ™åˆå§‹åŒ–
     if scanIdx == 1
-        map = Initialize(map, pose, scan);%°ÑÉ¨ÃèÊı¾İscan×ø±ê Í¨¹ıÎ»×Ëpose ×ª»»ÎªÈ«¾ÖµØÍ¼map×ø±ê
+        map = Initialize(map, pose, scan);%æŠŠæ‰«ææ•°æ®scanåæ ‡ é€šè¿‡ä½å§¿pose è½¬æ¢ä¸ºå…¨å±€åœ°å›¾mapåæ ‡
         miniUpdated = true;   % false
         continue;
     end
 
-    % 1. Èç¹ûÎÒÃÇÔÚ×îºóÒ»²½Ö´ĞĞÁË mini¸üĞÂ£¬ÎÒÃÇ½«¸üĞÂ ¾Ö²¿µã¼¯Í¼ ºÍ ¾Ö²¿Õ¤¸ñµØÍ¼£¨´ÖÂÔ£©
+    % 1. å¦‚æœæˆ‘ä»¬åœ¨æœ€åä¸€æ­¥æ‰§è¡Œäº† miniæ›´æ–°ï¼Œæˆ‘ä»¬å°†æ›´æ–° å±€éƒ¨ç‚¹é›†å›¾ å’Œ å±€éƒ¨æ …æ ¼åœ°å›¾ï¼ˆç²—ç•¥ï¼‰
     % 1. If we executed a mini update in last step, we shall update the local points map and local grid map (coarse)
     if miniUpdated
-%         %Îó²îÖğ½¥ÀÛ»ı£¬×îÖÕ¶¨Î»³ö´í
+%         %è¯¯å·®é€æ¸ç´¯ç§¯ï¼Œæœ€ç»ˆå®šä½å‡ºé”™
 %         scan_temp = ReadAScan(lidar_data, scanIdx-1, lidar, 6);
-%         pose_temp = pose;  % pose_guess   pose[scanIdx-1]£¿
+%         pose_temp = pose;  % pose_guess   pose[scanIdx-1]ï¼Ÿ
 %         scan_temp_w = Transform(scan_temp, pose_temp);
 %         map.points = scan_temp_w;
-%         localMap = ExtractLocalMap(map.points, pose_temp, scan, borderSize);%µÃµ½µ±Ç°É¨ÃèµÄÈ«¾Ö×ø±ê
+%         localMap = ExtractLocalMap(map.points, pose_temp, scan, borderSize);%å¾—åˆ°å½“å‰æ‰«æçš„å…¨å±€åæ ‡
 %         
-        localMap = ExtractLocalMap(map.points, pose, scan, borderSize);%µÃµ½µ±Ç°É¨ÃèµÄÈ«¾Ö×ø±ê
-        gridMap1 = OccuGrid(localMap, pixelSize);%´Óµã¼¯localMap Õ¤¸ñµ¥Ôª³ß´ç¶ÔÓ¦Êµ¼Ê³¤¶ÈÒÔpixelSize ´´½¨Õ¼ÓÃÕ¤¸ñµØÍ¼
-        gridMap2 = OccuGrid(localMap, pixelSize/2);%´Óµã¼¯localMap Õ¤¸ñµ¥Ôª³ß´ç¶ÔÓ¦Êµ¼Ê³¤¶ÈÒÔpixelSize/2 ´´½¨Õ¼ÓÃÕ¤¸ñµØÍ¼
+        localMap = ExtractLocalMap(map.points, pose, scan, borderSize);%å¾—åˆ°å½“å‰æ‰«æçš„å…¨å±€åæ ‡
+        gridMap1 = OccuGrid(localMap, pixelSize);%ä»ç‚¹é›†localMap æ …æ ¼å•å…ƒå°ºå¯¸å¯¹åº”å®é™…é•¿åº¦ä»¥pixelSize åˆ›å»ºå ç”¨æ …æ ¼åœ°å›¾
+        gridMap2 = OccuGrid(localMap, pixelSize/2);%ä»ç‚¹é›†localMap æ …æ ¼å•å…ƒå°ºå¯¸å¯¹åº”å®é™…é•¿åº¦ä»¥pixelSize/2 åˆ›å»ºå ç”¨æ …æ ¼åœ°å›¾
     end
     
-    % 2. Ê¹ÓÃºã¶¨ËÙ¶ÈÔË¶¯Ä£ĞÍÔ¤²âµ±Ç°Î»×Ë(¼´ÓÃÇ°Ò»×´Ì¬µ½±¾×´Ì¬µÄ¹ı³Ì ×÷Îª±¾×´Ì¬µ½ÏÂÒ»×´Ì¬µÄ¹ı³Ì ´Ó¶øÓÉ±¾×´Ì¬Ô¤²âÏÂÒ»×´Ì¬)
+    % 2. ä½¿ç”¨æ’å®šé€Ÿåº¦è¿åŠ¨æ¨¡å‹é¢„æµ‹å½“å‰ä½å§¿(å³ç”¨å‰ä¸€çŠ¶æ€åˆ°æœ¬çŠ¶æ€çš„è¿‡ç¨‹ ä½œä¸ºæœ¬çŠ¶æ€åˆ°ä¸‹ä¸€çŠ¶æ€çš„è¿‡ç¨‹ ä»è€Œç”±æœ¬çŠ¶æ€é¢„æµ‹ä¸‹ä¸€çŠ¶æ€)
     if scanIdx > 2
-% scan-scan ÏàÁÚÁ½Ö¡Ö®¼äµÄÆ¥Åä
+% scan-scan ç›¸é‚»ä¸¤å¸§ä¹‹é—´çš„åŒ¹é…
 %         scan_temp = ReadAScan(lidar_data, scanIdx-1, lidar, 6);
 %         pose_temp = pose;
 %         scan_temp_w = Transform(scan_temp, pose_temp);
 %         map.points = scan_temp_w;
 %         localMap = ExtractLocalMap(map.points, pose_temp, scan_temp, borderSize);
         
-% scan-mapµÄÆ¥Åä
-%         localMap = ExtractLocalMap(map.points, pose, scan, borderSize);%µÃµ½µ±Ç°É¨ÃèµÄÈ«¾Ö×ø±ê
-%         gridMap1 = OccuGrid(localMap, pixelSize);%´Óµã¼¯localMap Õ¤¸ñµ¥Ôª³ß´ç¶ÔÓ¦Êµ¼Ê³¤¶ÈÒÔpixelSize ´´½¨Õ¼ÓÃÕ¤¸ñµØÍ¼
+% scan-mapçš„åŒ¹é…
+%         localMap = ExtractLocalMap(map.points, pose, scan, borderSize);%å¾—åˆ°å½“å‰æ‰«æçš„å…¨å±€åæ ‡
+%         gridMap1 = OccuGrid(localMap, pixelSize);%ä»ç‚¹é›†localMap æ …æ ¼å•å…ƒå°ºå¯¸å¯¹åº”å®é™…é•¿åº¦ä»¥pixelSize åˆ›å»ºå ç”¨æ …æ ¼åœ°å›¾
 %         gridMap2 = OccuGrid(localMap, pixelSize/2);
-          pose_guess = pose + DiffPose(path(:,end-1), pose);%Ô¤²âÏÂÒ»Î»×Ë=µ±Ç°Î»×Ë+(µ±Ç°Î»×ËÓëÉÏÒ»Î»×ËµÄ²î) poseÊÇÒ»¸öÈ«¾Ö×ø±ê
+          pose_guess = pose + DiffPose(path(:,end-1), pose);%é¢„æµ‹ä¸‹ä¸€ä½å§¿=å½“å‰ä½å§¿+(å½“å‰ä½å§¿ä¸ä¸Šä¸€ä½å§¿çš„å·®) poseæ˜¯ä¸€ä¸ªå…¨å±€åæ ‡
     else
-% scan-scanµÄÆ¥Åä
+% scan-scançš„åŒ¹é…
 %         scan_temp = ReadAScan(lidar_data, scanIdx-1, lidar, 6);
 %         pose_temp = pose;
 %         scan_temp_w = Transform(scan_temp, pose_temp);
 %         map.points = scan_temp_w;
-%         localMap = ExtractLocalMap(map.points, pose_temp, scan_temp, borderSize);%µÃµ½µ±Ç°É¨ÃèµÄÈ«¾Ö×ø±ê
+%         localMap = ExtractLocalMap(map.points, pose_temp, scan_temp, borderSize);%å¾—åˆ°å½“å‰æ‰«æçš„å…¨å±€åæ ‡
 
-% scan-mapµÄÆ¥Åä
-%         localMap = ExtractLocalMap(map.points, pose, scan, borderSize);%µÃµ½µ±Ç°É¨ÃèµÄÈ«¾Ö×ø±ê
-%         gridMap1 = OccuGrid(localMap, pixelSize);%´Óµã¼¯localMap Õ¤¸ñµ¥Ôª³ß´ç¶ÔÓ¦Êµ¼Ê³¤¶ÈÒÔpixelSize ´´½¨Õ¼ÓÃÕ¤¸ñµØÍ¼
+% scan-mapçš„åŒ¹é…
+%         localMap = ExtractLocalMap(map.points, pose, scan, borderSize);%å¾—åˆ°å½“å‰æ‰«æçš„å…¨å±€åæ ‡
+%         gridMap1 = OccuGrid(localMap, pixelSize);%ä»ç‚¹é›†localMap æ …æ ¼å•å…ƒå°ºå¯¸å¯¹åº”å®é™…é•¿åº¦ä»¥pixelSize åˆ›å»ºå ç”¨æ …æ ¼åœ°å›¾
 %         gridMap2 = OccuGrid(localMap, pixelSize/2);
         
         pose_guess = pose;
     end
     
-    % 3. ¿ìËÙÆ¥Åä
+    % 3. å¿«é€ŸåŒ¹é…
     if miniUpdated
-        [pose, ~] = FastMatch(gridMap1, scan, pose_guess, fastResolution);%¸ù¾İµ±Ç°Õ¤¸ñµØÍ¼ ÓÅ»¯ Ô¤²âµÄÏÂÒ»Î»×Ë
+        [pose, ~] = FastMatch(gridMap1, scan, pose_guess, fastResolution);%æ ¹æ®å½“å‰æ …æ ¼åœ°å›¾ ä¼˜åŒ– é¢„æµ‹çš„ä¸‹ä¸€ä½å§¿
     else
         [pose, ~] = FastMatch(gridMap2, scan, pose_guess, fastResolution);
     end
     
-    % 4. Ê¹ÓÃ½Ï¸ßµÄ·Ö±æÂÊÔÙÏ¸»¯ Ô¤²âÏÂÒ»Î»×Ë
+    % 4. ä½¿ç”¨è¾ƒé«˜çš„åˆ†è¾¨ç‡å†ç»†åŒ– é¢„æµ‹ä¸‹ä¸€ä½å§¿
     % gridMap = OccuGrid(localMap, pixelSize/2);
-    [pose, hits] = FastMatch(gridMap2, scan, pose, fastResolution/2);%·µ»Ø½øÒ»²½¸üĞÂµÄÏÂÒ»Î»×Ëpose
+    [pose, hits] = FastMatch(gridMap2, scan, pose, fastResolution/2);%è¿”å›è¿›ä¸€æ­¥æ›´æ–°çš„ä¸‹ä¸€ä½å§¿pose
     
-    % Èç¹û»úÆ÷ÈËÒÆ¶¯ÁËÒ»¶¨¾àÀë£¬ÔòÖ´ĞĞmini¸üĞÂ
-    dp = abs(DiffPose(map.keyscans(end).pose, pose));%Á½´ÎÎ»×ËµÄ²î
+    % å¦‚æœæœºå™¨äººç§»åŠ¨äº†ä¸€å®šè·ç¦»ï¼Œåˆ™æ‰§è¡Œminiæ›´æ–°
+    dp = abs(DiffPose(map.keyscans(end).pose, pose));%ä¸¤æ¬¡ä½å§¿çš„å·®
     if dp(1)>miniUpdateDT || dp(2)>miniUpdateDT || dp(3)>miniUpdateDR
         miniUpdated = true;
         [map, pose] = AddAKeyScan(map, gridMap2, scan, pose, hits,...
@@ -118,7 +118,7 @@ for scanIdx = 1 : 1 : N
         miniUpdated = false;
     end
     
-    path = [path, pose]; %°Ñµ±Ç°Î»×Ëpose ²¢ÈëÂ·¾¶path     
+    path = [path, pose]; %æŠŠå½“å‰ä½å§¿pose å¹¶å…¥è·¯å¾„path     
     
     % ===== Loop Closing =========================================
     % if miniUpdated
@@ -129,11 +129,11 @@ for scanIdx = 1 : 1 : N
     % end
     %----------------------------------------------------------------------
     
-    % »æÍ¼
-    if mod(scanIdx, 5) == 0%Ã¿30²½»­Ò»´ÎÍ¼
+    % ç»˜å›¾
+    if mod(scanIdx, 5) == 0%æ¯30æ­¥ç”»ä¸€æ¬¡å›¾
         PlotMap(cfig, map, path, scan, scanIdx);
-        pause(0.3);%ÔİÍ£0.3Ãë¡£
-        %»ñÈ¡ÊÓÆµÖ¡²¢±£´æ³ÉÊÓÆµ
+        pause(0.3);%æš‚åœ0.3ç§’ã€‚
+        %è·å–è§†é¢‘å¸§å¹¶ä¿å­˜æˆè§†é¢‘
         if saveFrame==1
             frame = getframe(cfig);
             writeVideo(writerObj, frame);
@@ -141,5 +141,5 @@ for scanIdx = 1 : 1 : N
     end
 end
 if saveFrame==1
-    close(writerObj); %¹Ø±ÕÊÓÆµÎÄ¼ş¾ä±ú 
+    close(writerObj); %å…³é—­è§†é¢‘æ–‡ä»¶å¥æŸ„ 
 end
