@@ -36,10 +36,10 @@ for i=1:N
 end
 
 %% 数据保存为mat文件
-save ./dataset/new_laser_data.mat times ranges
+save ./new_laser_data.mat times ranges
 
-%% 可视化
-% LaserData = load('E:\LettieZ\SLAM_Matlab\LaserSLAM\dataset\new_laser_data.mat');
+%% 可视化极坐标雷达点 https://blog.csdn.net/xi_shui/article/details/121293508
+% LaserData = load('./new_laser_data.mat');
 for i=1:N
     for j=1:1:360
     %         % ===== 与RVIZ odom坐标对应 ===========================================
@@ -50,8 +50,6 @@ for i=1:N
     %         polarscatter((j-180)*0.0174,laser_PointCloud{1,1}.Ranges(j),'.')
     %         hold on
     %         end
-        % https://blog.csdn.net/xi_shui/article/details/121293508
-        %----------------------------------------------------------------------
         polarscatter(j,ranges(j,:),'.') % 注意:MATLAB的极坐标画点函数是弧度制
         %scatter3(xyz(:,1), xyz(:,2), xyz(:,3), '.');
         hold on
